@@ -1,0 +1,14 @@
+*.iml
+.gradle/
+.gradle-user/
+.idea/
+local.properties
+build/
+app/build/
+captures/
+.externalNativeBuild/
+.cxx/
+*.apk
+*.aab
+
+*.xlsx

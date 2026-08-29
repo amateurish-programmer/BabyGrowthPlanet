@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<data-extraction-rules>
+    <cloud-backup>
+        <include domain="database" path="growth_planet.db" />
+        <include domain="database" path="growth_planet.db-shm" />
+        <include domain="database" path="growth_planet.db-wal" />
+        <include domain="sharedpref" path="growth_planet_settings.xml" />
+    </cloud-backup>
+    <device-transfer>
+        <include domain="database" path="growth_planet.db" />
+        <include domain="database" path="growth_planet.db-shm" />
+        <include domain="database" path="growth_planet.db-wal" />
+        <include domain="sharedpref" path="growth_planet_settings.xml" />
+    </device-transfer>
+</data-extraction-rules>
