@@ -10,6 +10,7 @@
     for (const button of document.querySelectorAll('form button')) button.disabled = true;
     return;
   }
+  const region = prefix !== '/baobei/api/v1' && window.BAOBEI_CONFIG?.region === 'ap-southeast-1' ? 'ap-southeast-1' : '';
   let token = '';
   let account = null;
   let sessionId = '';
@@ -65,6 +66,7 @@
     const stale = () => requestGeneration !== sessionGeneration || requestToken !== token;
     const headers = { Accept: 'application/json' };
     if (prefix === '/baobei/api/v1') headers['ngrok-skip-browser-warning'] = 'true';
+    if (region) headers['x-region'] = region;
     if (requestToken) headers.Authorization = `Bearer ${requestToken}`;
     if (body !== undefined) headers['Content-Type'] = 'application/json';
     let response;
