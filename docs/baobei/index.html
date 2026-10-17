@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta http-equiv="Content-Security-Policy" content="default-src &#x27;self&#x27;; script-src &#x27;self&#x27;; style-src &#x27;self&#x27;; connect-src https://eqmxotufuixhvmwlwhem.supabase.co; img-src &#x27;self&#x27;; object-src &#x27;none&#x27;; base-uri &#x27;none&#x27;; form-action &#x27;self&#x27;">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="referrer" content="no-referrer">
+  <title>宝贝成长星球 · 账号管理</title>
+  <link rel="stylesheet" href="static/style.css">
+  <script src="static/config.js" defer></script>
+  <script src="static/app.js" defer></script>
+</head>
+<body>
+  <header class="site-header">
+    <div><span class="brand">宝贝成长星球</span><p>家庭账号 · 设备管理</p></div>
+    <div id="session-actions" hidden><button id="refresh-button" type="button" class="secondary">刷新</button><button id="logout-button" type="button" class="secondary">退出登录</button></div>
+  </header>
+  <main>
+    <div id="notice" role="status" aria-live="polite" tabindex="-1" hidden></div>
+    <noscript>请启用浏览器 JavaScript 后使用账号管理。</noscript>
+    <section id="auth-view" class="auth-section" aria-labelledby="auth-heading">
+      <h1 id="auth-heading">登录家庭账号</h1>
+      <p class="muted">账号连接固定服务器，无需填写 IP 地址。App 本地使用无需登录；登录后可同步家庭数据。刷新此页面后需要重新登录。</p>
+      <div class="auth-tabs" role="group" aria-label="账号操作">
+        <button id="login-tab" type="button" aria-pressed="true">登录</button>
+        <button id="register-tab" type="button" class="secondary" aria-pressed="false">注册</button>
+      </div>
+      <form id="login-form">
+        <label for="login-username">用户名</label><input id="login-username" name="username" autocomplete="username" minlength="3" maxlength="64" required>
+        <label for="login-password">密码</label><input id="login-password" name="password" type="password" autocomplete="current-password" minlength="10" maxlength="128" required>
+        <button type="submit">登录</button>
+      </form>
+      <form id="register-form" hidden>
+        <label for="register-username">用户名</label><input id="register-username" name="username" autocomplete="username" minlength="3" maxlength="64" required>
+        <label for="register-password">密码 <span class="muted">10–128 个字符</span></label><input id="register-password" name="password" type="password" autocomplete="new-password" minlength="10" maxlength="128" required>
+        <label for="register-password-confirm">再次输入密码</label><input id="register-password-confirm" type="password" autocomplete="new-password" minlength="10" maxlength="128" required>
+        <label for="register-invite">邀请码</label><input id="register-invite" name="inviteCode" autocomplete="off" maxlength="256" required>
+        <p class="muted">请向管理员获取邀请码。</p><button type="submit">注册并登录</button>
+      </form>
+    </section>
+    <div id="account-view" hidden>
+      <section class="section" aria-labelledby="account-heading">
+        <div class="section-heading"><h1 id="account-heading">我的账号</h1><span id="account-role" class="tag"></span></div>
+        <dl class="account-details"><div><dt>用户名</dt><dd id="account-username"></dd></div><div><dt>账号 ID</dt><dd id="account-id" class="identifier"></dd></div></dl>
+      </section>
+      <div class="account-columns">
+        <section class="section" aria-labelledby="devices-heading"><h2 id="devices-heading">登录设备</h2><p class="muted">撤销后，该设备需要重新登录。</p><div id="devices-list" aria-live="polite"></div></section>
+        <section class="section" aria-labelledby="password-heading"><h2 id="password-heading">修改密码</h2><p class="muted">修改后，其他设备的登录会立即失效。</p>
+          <form id="password-form">
+            <label for="old-password">原密码</label><input id="old-password" type="password" autocomplete="current-password" minlength="10" maxlength="128" required>
+            <label for="new-password">新密码</label><input id="new-password" type="password" autocomplete="new-password" minlength="10" maxlength="128" required>
+            <label for="new-password-confirm">再次输入新密码</label><input id="new-password-confirm" type="password" autocomplete="new-password" minlength="10" maxlength="128" required>
+            <button type="submit">修改密码</button>
+          </form>
+        </section>
+      </div>
+      <div id="admin-view" hidden>
+        <section class="section" aria-labelledby="users-heading"><div class="section-heading"><h2 id="users-heading">用户管理</h2><span id="users-count" class="muted"></span></div><p class="muted">禁用或重置密码会立即撤销该用户的所有登录。</p><div id="users-list" aria-live="polite"></div></section>
+        <section class="section invite-section" aria-labelledby="invite-heading"><h2 id="invite-heading">注册邀请码</h2><p class="muted">更新后，注册需要使用新的邀请码。</p><div class="invite-current"><span>当前邀请码</span><code id="current-invite"></code></div>
+          <form id="invite-form"><label for="invite-code">新邀请码 <span class="muted">16–128 个字母、数字、_ 或 -</span></label><input id="invite-code" autocomplete="off" minlength="16" maxlength="128" pattern="[A-Za-z0-9_-]{16,128}" required><button type="submit">更新邀请码</button></form>
+        </section>
+      </div>
+    </div>
+  </main>
+  <dialog id="confirm-dialog" aria-labelledby="confirm-title" aria-describedby="confirm-description">
+    <form id="confirm-form"><h2 id="confirm-title"></h2><p id="confirm-description"></p>
+      <div id="confirm-password-fields" hidden><label for="confirm-password">新密码</label><input id="confirm-password" type="password" autocomplete="new-password" minlength="10" maxlength="128"><label for="confirm-password-repeat">再次输入新密码</label><input id="confirm-password-repeat" type="password" autocomplete="new-password" minlength="10" maxlength="128"></div>
+      <p id="confirm-error" role="alert" hidden></p><div class="dialog-actions"><button id="confirm-cancel" type="button" class="secondary">取消</button><button id="confirm-submit" type="submit">确认</button></div>
+    </form>
+  </dialog>
+  <footer>家庭账号与设备管理</footer>
+</body>
+</html>
